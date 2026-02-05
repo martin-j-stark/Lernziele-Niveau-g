@@ -1,5 +1,5 @@
 // Simple offline cache for a static site (GitHub Pages / Netlify etc.)
-const CACHE = "lernziele-g-v1";
+const CACHE = "lernziele-g-v2";
 const ASSETS = [
   "./",
   "./index.html",
