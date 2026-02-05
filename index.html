@@ -4,40 +4,169 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Lernziele Niveau g – Üben</title>
+
   <link rel="manifest" href="manifest.webmanifest" />
   <meta name="theme-color" content="#ffffff" />
+
   <style>
-    :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; }
-    body { margin: 0; background: #f6f7fb; color: #111; }
-    header { padding: 16px; background: #fff; border-bottom: 1px solid #e7e7ef; position: sticky; top: 0; }
-    header h1 { margin: 0; font-size: 18px; }
-    main { max-width: 900px; margin: 0 auto; padding: 16px; }
-    .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-    .tab { border: 1px solid #ddd; background: #fff; padding: 8px 10px; border-radius: 10px; cursor: pointer; }
-    .tab[aria-selected="true"] { border-color: #111; }
-    .card { background: #fff; border: 1px solid #e7e7ef; border-radius: 14px; padding: 16px; }
+    :root {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      --bg1: #f5f7ff;
+      --bg2: #fdf7ff;
+      --card: rgba(255,255,255,.80);
+      --stroke: rgba(0,0,0,.08);
+      --text: #101114;
+      --muted: rgba(16,17,20,.68);
+      --shadow: 0 10px 30px rgba(0,0,0,.08);
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 600px at 15% 0%, #eaf1ff 0%, transparent 60%),
+        radial-gradient(900px 500px at 85% 10%, #ffeef5 0%, transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 16px;
+      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,.78);
+      border-bottom: 1px solid var(--stroke);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header h1 { margin: 0; font-size: 18px; letter-spacing: .2px; }
+    .subtitle { margin-top: 6px; font-size: 13px; color: var(--muted); }
+
+    main { max-width: 920px; margin: 0 auto; padding: 16px; }
+
+    .tabs { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+    .tab {
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.85);
+      padding: 9px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+    }
+    .tab:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+    .tab[aria-selected="true"] {
+      border-color: rgba(0,0,0,.16);
+      background: rgba(255,255,255,.97);
+      box-shadow: var(--shadow);
+      font-weight: 650;
+    }
+
+    .progressWrap{
+      margin-top: 10px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.06);
+      overflow: hidden;
+    }
+    .progressBar{
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #6ea8ff, #ff7db3, #9bffcf);
+      transition: width .35s ease;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
     .row { display: flex; gap: 12px; flex-wrap: wrap; }
-    .btn { border: 1px solid #ddd; background: #fff; padding: 10px 12px; border-radius: 10px; cursor: pointer; }
-    .btn.primary { border-color: #111; }
-    .muted { color: #555; font-size: 14px; }
-    .big { font-size: 18px; line-height: 1.35; }
+
+    .btn {
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.92);
+      padding: 10px 14px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: transform .10s ease, box-shadow .10s ease, filter .10s ease;
+      user-select: none;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+    .btn:active { transform: translateY(0px) scale(.99); filter: brightness(.98); }
+
+    .btn.primary {
+      border-color: rgba(0,0,0,.16);
+      background: linear-gradient(180deg, rgba(255,255,255,.97), rgba(255,255,255,.78));
+      box-shadow: var(--shadow);
+      font-weight: 650;
+    }
+    .btn.good { border-color: rgba(0,170,119,.25); }
+    .btn.mid  { border-color: rgba(0,0,0,.12); }
+    .btn.hard { border-color: rgba(194,32,0,.22); }
+
+    .muted { color: var(--muted); font-size: 14px; }
+    .big { font-size: 18px; line-height: 1.42; }
     .sep { height: 12px; }
-    .input { width: 100%; box-sizing: border-box; padding: 10px 12px; border-radius: 10px; border: 1px solid #ddd; font-size: 16px; }
-    .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; background: #eef; border: 1px solid #dde; font-size: 12px; margin-left: 6px; }
-    details { background:#fafbff; border:1px dashed #ccd; padding:10px 12px; border-radius:12px; }
-    .ok { color: #0a7; }
-    .bad { color: #c20; }
-    code { background: #f0f1f6; padding: 2px 6px; border-radius: 8px; }
+
+    .input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--stroke);
+      font-size: 16px;
+      background: rgba(255,255,255,.94);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.6);
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(110,168,255,.18);
+      border: 1px solid rgba(110,168,255,.28);
+      font-size: 12px;
+      margin-left: 6px;
+    }
+
+    details {
+      background: rgba(255,255,255,.58);
+      border: 1px dashed rgba(0,0,0,.18);
+      padding: 12px 14px;
+      border-radius: 16px;
+    }
+    summary { cursor: pointer; }
+
+    .ok  { color: #0a7; font-weight: 750; }
+    .bad { color: #c20; font-weight: 750; }
+
+    .shake { animation: shake .25s linear; }
+    @keyframes shake {
+      0%{transform: translateX(0)}
+      25%{transform: translateX(-3px)}
+      50%{transform: translateX(3px)}
+      75%{transform: translateX(-2px)}
+      100%{transform: translateX(0)}
+    }
   </style>
 </head>
+
 <body>
 <header>
-  <h1>Lernziele Niveau g – Üben <span class="pill" id="statsPill">…</span></h1>
+  <h1>🚀 Lernziele Niveau g – Üben <span class="pill" id="statsPill">…</span></h1>
+  <div class="subtitle">Kleine Schritte, grosses Gehirn 🧠✨</div>
+  <div class="progressWrap" aria-hidden="true"><div class="progressBar" id="progressBar"></div></div>
+
   <div class="tabs" role="tablist">
     <button class="tab" role="tab" aria-selected="true" data-view="cards">Lernkarten</button>
     <button class="tab" role="tab" aria-selected="false" data-view="mc">Quiz (MC)</button>
-    <button class="tab" role="tab" aria-selected="false" data-view="input">Kurztest (Eingabe)</button>
-    <button class="tab" role="tab" aria-selected="false" data-view="manage">Daten</button>
+    <button class="tab" role="tab" aria-selected="false" data-view="input">Kurztest</button>
   </div>
 </header>
 
@@ -48,134 +177,60 @@
 <script>
 /**
  * DATENBASIS: Lernziel-Zusammenfassung Niveau G (aus dem Chat).
- * Du kannst später weitere Karten ergänzen.
  */
 const cards = [
-  {
-    id: "g-01",
-    front: "Du kennst die Sinne und die entsprechenden Organe beim Menschen.",
-    back: "Wir haben z. B. diese Sinne: Hören (Ohr), Sehen (Auge), Tasten (Haut), Riechen (Nase), Schmecken (Zunge).",
-    tags: ["Sinne"]
-  },
-  {
-    id: "g-02",
-    front: "Du kennst den Unterschied zwischen Riechen und Schmecken.",
-    back: "Schmecken passiert mit der Zunge. Riechen passiert mit der Nase. Das Aroma kommt oft von Zunge und Nase zusammen.",
-    tags: ["Sinne", "Aroma"]
-  },
-  {
-    id: "g-03",
-    front: "Du kennst das Reiz-Reaktionsschema.",
-    back: "Reiz → Leitung → Verarbeitung → Leitung → Reaktion.",
-    tags: ["Reiz-Reaktion"]
-  },
-  {
-    id: "g-04",
-    front: "Du kannst erklären, was in deinem Körper passiert, wenn ein Reiz eine Reaktion auslöst.",
-    back: "Sinneszellen merken den Reiz und machen Nervenimpulse. Die Impulse gehen zum Gehirn. Dann gehen Impulse zu den Muskeln → du reagierst.",
-    tags: ["Reiz-Reaktion", "Nerven", "Gehirn"]
-  },
-  {
-    id: "g-05",
-    front: "Du kennst den Unterschied zwischen einer bewussten und unbewussten Reaktion.",
-    back: "Bewusst: Ich denke nach und entscheide absichtlich. Unbewusst: Es passiert automatisch.",
-    tags: ["Reaktionen"]
-  },
-  {
-    id: "g-06",
-    front: "Du kannst erklären, was ein Reflex ist und kennst deren Aufgabe.",
-    back: "Ein Reflex ist sehr schnell und automatisch. Er schützt den Körper vor Verletzungen.",
-    tags: ["Reflex", "Reaktionen"]
-  },
-  {
-    id: "g-07",
-    front: "Dir sind die Begriffe Schallquellen, Membran und Ausbreitung des Schalls bekannt.",
-    back: "Eine Schallquelle macht Schall. Eine Membran kann schwingen. Schall breitet sich aus, weil Luftteilchen schwingen und die Bewegung weitergeben.",
-    tags: ["Schall"]
-  },
-  {
-    id: "g-08",
-    front: "Du weisst wie der Schall auf unterschiedliche Materialien (fest, elastisch) reagiert.",
-    back: "Schall kann Dinge zum Schwingen bringen oder zurückgeworfen werden (Echo).",
-    tags: ["Schall", "Materialien"]
-  },
-  {
-    id: "g-09",
-    front: "Du kennst die 6 wichtigsten Teile des Gehörs.",
-    back: "Ohrmuschel – Gehörgang – Trommelfell – Gehörknöchelchen – Hörschnecke – Hörnerv.",
-    tags: ["Ohr", "Gehör"]
-  },
-  {
-    id: "g-10",
-    front: "Du weisst wie ein Ohr funktioniert.",
-    back: "Ohrmuschel fängt Schall auf → Gehörgang leitet → Trommelfell schwingt → Knöchelchen übertragen → Hörschnecke macht Nervenimpulse → Hörnerv bringt sie ins Gehirn.",
-    tags: ["Ohr", "Gehör"]
-  },
-  {
-    id: "g-11",
-    front: "Du weisst wie die Lautstärke gemessen wird und kennst die Einheit.",
-    back: "Lautstärke misst man in Dezibel (dB).",
-    tags: ["Lärm", "Schall"]
-  },
-  {
-    id: "g-12",
-    front: "Du kannst beurteilen, ab welcher Lautstärke das Gehör Schaden nehmen kann.",
-    back: "Sehr laut ist gefährlich. Je lauter und je länger, desto grösser das Risiko (z. B. Disco, Feuerwerk).",
-    tags: ["Lärm", "Gehörschutz"]
-  },
-  {
-    id: "g-13",
-    front: "Du kennst verschiedene Möglichkeiten, wie du dich vor einem Gehörschaden schützen kannst.",
-    back: "Leiser hören, Pausen machen, nicht zu lange im Lärm bleiben, und Gehörschutz/Ohrstöpsel benutzen.",
-    tags: ["Gehörschutz", "Lärm"]
-  }
+  { id:"g-01", front:"Du kennst die Sinne und die entsprechenden Organe beim Menschen.", back:"Wir haben z. B. diese Sinne: Hören (Ohr), Sehen (Auge), Tasten (Haut), Riechen (Nase), Schmecken (Zunge).", tags:["Sinne"] },
+  { id:"g-02", front:"Du kennst den Unterschied zwischen Riechen und Schmecken.", back:"Schmecken passiert mit der Zunge. Riechen passiert mit der Nase. Das Aroma kommt oft von Zunge und Nase zusammen.", tags:["Sinne","Aroma"] },
+  { id:"g-03", front:"Du kennst das Reiz-Reaktionsschema.", back:"Reiz → Leitung → Verarbeitung → Leitung → Reaktion.", tags:["Reiz-Reaktion"] },
+  { id:"g-04", front:"Du kannst erklären, was in deinem Körper passiert, wenn ein Reiz eine Reaktion auslöst.", back:"Sinneszellen merken den Reiz und machen Nervenimpulse. Die Impulse gehen zum Gehirn. Dann gehen Impulse zu den Muskeln → du reagierst.", tags:["Reiz-Reaktion","Nerven","Gehirn"] },
+  { id:"g-05", front:"Du kennst den Unterschied zwischen einer bewussten und unbewussten Reaktion.", back:"Bewusst: Ich denke nach und entscheide absichtlich. Unbewusst: Es passiert automatisch.", tags:["Reaktionen"] },
+  { id:"g-06", front:"Du kannst erklären, was ein Reflex ist und kennst deren Aufgabe.", back:"Ein Reflex ist sehr schnell und automatisch. Er schützt den Körper vor Verletzungen.", tags:["Reflex","Reaktionen"] },
+  { id:"g-07", front:"Dir sind die Begriffe Schallquellen, Membran und Ausbreitung des Schalls bekannt.", back:"Eine Schallquelle macht Schall. Eine Membran kann schwingen. Schall breitet sich aus, weil Luftteilchen schwingen und die Bewegung weitergeben.", tags:["Schall"] },
+  { id:"g-08", front:"Du weisst wie der Schall auf unterschiedliche Materialien (fest, elastisch) reagiert.", back:"Schall kann Dinge zum Schwingen bringen oder zurückgeworfen werden (Echo).", tags:["Schall","Materialien"] },
+  { id:"g-09", front:"Du kennst die 6 wichtigsten Teile des Gehörs.", back:"Ohrmuschel – Gehörgang – Trommelfell – Gehörknöchelchen – Hörschnecke – Hörnerv.", tags:["Ohr","Gehör"] },
+  { id:"g-10", front:"Du weisst wie ein Ohr funktioniert.", back:"Ohrmuschel fängt Schall auf → Gehörgang leitet → Trommelfell schwingt → Knöchelchen übertragen → Hörschnecke macht Nervenimpulse → Hörnerv bringt sie ins Gehirn.", tags:["Ohr","Gehör"] },
+  { id:"g-11", front:"Du weisst wie die Lautstärke gemessen wird und kennst die Einheit.", back:"Lautstärke misst man in Dezibel (dB).", tags:["Lärm","Schall"] },
+  { id:"g-12", front:"Du kannst beurteilen, ab welcher Lautstärke das Gehör Schaden nehmen kann.", back:"Sehr laut ist gefährlich. Je lauter und je länger, desto grösser das Risiko (z. B. Disco, Feuerwerk).", tags:["Lärm","Gehörschutz"] },
+  { id:"g-13", front:"Du kennst verschiedene Möglichkeiten, wie du dich vor einem Gehörschaden schützen kannst.", back:"Leiser hören, Pausen machen, nicht zu lange im Lärm bleiben, und Gehörschutz/Ohrstöpsel benutzen.", tags:["Gehörschutz","Lärm"] },
 ];
 
 // --- Mini-Spaced-Repetition State (localStorage) ---
-const LS_KEY = "lernziele_g_progress_v1";
-const defaultState = () => ({
-  idx: 0,
-  // cardId -> { ease: 1..3, due: timestamp }
-  sched: {}
-});
-const loadState = () => {
-  try { return JSON.parse(localStorage.getItem(LS_KEY)) ?? defaultState(); }
-  catch { return defaultState(); }
-};
+const LS_KEY = "lernziele_g_progress_v2";
+const defaultState = () => ({ idx: 0, sched: {} });
+const loadState = () => { try { return JSON.parse(localStorage.getItem(LS_KEY)) ?? defaultState(); } catch { return defaultState(); } };
 const saveState = (s) => localStorage.setItem(LS_KEY, JSON.stringify(s));
-
 let state = loadState();
 
-function now() { return Date.now(); }
+function now(){ return Date.now(); }
 
-function dueCards() {
+function dueCards(){
   const due = cards.filter(c => (state.sched[c.id]?.due ?? 0) <= now());
   return due.length ? due : cards;
 }
-
-function pickCard() {
+function pickCard(){
   const pool = dueCards();
   const idx = state.idx % pool.length;
   return pool[idx];
 }
-
-function setView(name) {
-  document.querySelectorAll(".tab").forEach(b =>
-    b.setAttribute("aria-selected", b.dataset.view === name ? "true" : "false")
-  );
+function setView(name){
+  document.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-selected", b.dataset.view === name ? "true" : "false"));
   render(name);
 }
 
-function updateStats() {
+function updateStats(){
   const total = cards.length;
   const due = cards.filter(c => (state.sched[c.id]?.due ?? 0) <= now()).length;
   document.getElementById("statsPill").textContent = `${due} fällig / ${total} total`;
+
+  // je weniger fällig, desto voller :)
+  const progress = total === 0 ? 0 : Math.max(0, Math.min(1, (total - due) / total));
+  const bar = document.getElementById("progressBar");
+  if (bar) bar.style.width = `${Math.round(progress * 100)}%`;
 }
 
-function schedule(cardId, rating) {
+function schedule(cardId, rating){
   const old = state.sched[cardId] ?? { ease: 2, due: 0 };
   let ease = old.ease;
-
   if (rating === "easy") ease = Math.min(3, ease + 1);
   if (rating === "hard") ease = Math.max(1, ease - 1);
 
@@ -188,23 +243,23 @@ function schedule(cardId, rating) {
   updateStats();
 }
 
-function shuffle(arr) {
+function shuffle(arr){
   const a = arr.slice();
-  for (let i=a.length-1; i>0; i--) {
+  for(let i=a.length-1; i>0; i--){
     const j = Math.floor(Math.random()*(i+1));
-    [a[i], a[j]] = [a[j], a[i]];
+    [a[i],a[j]]=[a[j],a[i]];
   }
   return a;
 }
 
-function render(viewName) {
+function render(viewName){
   updateStats();
   const el = document.getElementById("view");
 
-  if (viewName === "cards") {
+  if(viewName === "cards"){
     const c = pickCard();
     el.innerHTML = `
-      <div class="muted">Lernkarte</div>
+      <div class="muted">🗂️ Lernkarte</div>
       <div class="sep"></div>
       <div class="big"><strong>Frage:</strong> ${escapeHtml(c.front)}</div>
       <div class="sep"></div>
@@ -215,10 +270,10 @@ function render(viewName) {
       </details>
       <div class="sep"></div>
       <div class="row">
-        <button class="btn" id="hard">Schwer</button>
-        <button class="btn" id="ok">Okay</button>
-        <button class="btn primary" id="easy">Leicht</button>
-        <button class="btn" id="skip">Nächste</button>
+        <button class="btn hard" id="hard">😵 Schwer</button>
+        <button class="btn mid" id="ok">🙂 Okay</button>
+        <button class="btn primary good" id="easy">😎 Leicht</button>
+        <button class="btn" id="skip">➡️ Nächste</button>
       </div>
       <div class="sep"></div>
       <div class="muted">Tags: ${(c.tags ?? []).map(t => `<span class="pill">${escapeHtml(t)}</span>`).join(" ")}</div>
@@ -230,12 +285,13 @@ function render(viewName) {
     return;
   }
 
-  if (viewName === "mc") {
+  if(viewName === "mc"){
     const c = pickCard();
     const others = cards.filter(x => x.id !== c.id).map(x => x.back);
     const options = shuffle([c.back, ...shuffle(others).slice(0,3)]);
+
     el.innerHTML = `
-      <div class="muted">Quiz (Multiple Choice)</div>
+      <div class="muted">🎯 Quiz (Multiple Choice)</div>
       <div class="sep"></div>
       <div class="big"><strong>${escapeHtml(c.front)}</strong></div>
       <div class="sep"></div>
@@ -246,17 +302,20 @@ function render(viewName) {
       <div id="fb" class="big"></div>
       <div class="sep"></div>
       <div class="row">
-        <button class="btn" id="next">Nächste</button>
+        <button class="btn" id="next">➡️ Nächste</button>
       </div>
     `;
+
     el.querySelectorAll("button[data-i]").forEach(b => {
       b.onclick = () => {
         const chosen = b.textContent;
         const fb = el.querySelector("#fb");
         if (chosen === c.back) {
-          fb.innerHTML = `<span class="ok">✅ Richtig!</span>`;
+          fb.innerHTML = `<span class="ok">✅ Richtig!</span> <span aria-hidden="true">✨</span>`;
           schedule(c.id, "easy");
         } else {
+          fb.classList.add("shake");
+          setTimeout(()=>fb.classList.remove("shake"), 260);
           fb.innerHTML = `<span class="bad">❌ Falsch.</span><br><span class="muted">Richtig wäre:</span><br>${escapeHtml(c.back)}`;
           schedule(c.id, "hard");
         }
@@ -267,18 +326,18 @@ function render(viewName) {
     return;
   }
 
-  if (viewName === "input") {
+  if(viewName === "input"){
     const c = pickCard();
     el.innerHTML = `
-      <div class="muted">Kurztest (Eingabe)</div>
+      <div class="muted">✍️ Kurztest (Eingabe)</div>
       <div class="sep"></div>
       <div class="big"><strong>${escapeHtml(c.front)}</strong></div>
       <div class="sep"></div>
       <textarea class="input" id="ans" rows="4" placeholder="Schreibe deine Antwort..."></textarea>
       <div class="sep"></div>
       <div class="row">
-        <button class="btn primary" id="check">Selbstkontrolle</button>
-        <button class="btn" id="next">Nächste</button>
+        <button class="btn primary" id="check">✅ Selbstkontrolle</button>
+        <button class="btn" id="next">➡️ Nächste</button>
       </div>
       <div class="sep"></div>
       <div id="solution" style="display:none;">
@@ -289,9 +348,9 @@ function render(viewName) {
         </details>
         <div class="sep"></div>
         <div class="row">
-          <button class="btn" id="rateHard">War schwer</button>
-          <button class="btn" id="rateOk">War okay</button>
-          <button class="btn primary" id="rateEasy">War leicht</button>
+          <button class="btn hard" id="rateHard">😵 War schwer</button>
+          <button class="btn mid" id="rateOk">🙂 War okay</button>
+          <button class="btn primary good" id="rateEasy">😎 War leicht</button>
         </div>
       </div>
     `;
@@ -302,41 +361,9 @@ function render(viewName) {
     el.querySelector("#rateEasy").onclick = () => { schedule(c.id, "easy"); render("input"); };
     return;
   }
-
-  if (viewName === "manage") {
-    el.innerHTML = `
-      <div class="muted">Daten / Reset</div>
-      <div class="sep"></div>
-      <div class="big">
-        <p><strong>So passt du deine Tabelle an:</strong></p>
-        <ol>
-          <li>Suche im Code die Liste <code>const cards = [...]</code></li>
-          <li>Jeder Eintrag ist eine Lernkarte mit <code>front</code> (Frage) und <code>back</code> (Lösung).</li>
-          <li>Du kannst optional <code>tags</code> ergänzen.</li>
-        </ol>
-      </div>
-      <div class="sep"></div>
-      <div class="row">
-        <button class="btn" id="reset">Fortschritt zurücksetzen</button>
-        <button class="btn" id="export">Fortschritt exportieren (JSON)</button>
-      </div>
-      <div class="sep"></div>
-      <textarea class="input" id="out" rows="6" placeholder="Export erscheint hier..."></textarea>
-    `;
-    el.querySelector("#reset").onclick = () => {
-      localStorage.removeItem(LS_KEY);
-      state = loadState();
-      updateStats();
-      el.querySelector("#out").value = "Zurückgesetzt ✅";
-    };
-    el.querySelector("#export").onclick = () => {
-      el.querySelector("#out").value = JSON.stringify(state, null, 2);
-    };
-    return;
-  }
 }
 
-function escapeHtml(s) {
+function escapeHtml(s){
   return String(s)
     .replaceAll("&","&amp;")
     .replaceAll("<","&lt;")
@@ -345,18 +372,16 @@ function escapeHtml(s) {
     .replaceAll("'","&#039;");
 }
 
+// Tabs
 document.querySelectorAll(".tab").forEach(b => b.addEventListener("click", () => setView(b.dataset.view)));
 render("cards");
-</script>
 
-<script>
-  // PWA offline cache (optional)
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js').catch(() => {});
-    });
-  }
+// PWA offline cache (optional)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
 </script>
-
 </body>
 </html>
