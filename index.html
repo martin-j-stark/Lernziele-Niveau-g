@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lernziele Niveau g – Üben</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#ffffff" />
+  <style>
+    :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; }
+    body { margin: 0; background: #f6f7fb; color: #111; }
+    header { padding: 16px; background: #fff; border-bottom: 1px solid #e7e7ef; position: sticky; top: 0; }
+    header h1 { margin: 0; font-size: 18px; }
+    main { max-width: 900px; margin: 0 auto; padding: 16px; }
+    .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .tab { border: 1px solid #ddd; background: #fff; padding: 8px 10px; border-radius: 10px; cursor: pointer; }
+    .tab[aria-selected="true"] { border-color: #111; }
+    .card { background: #fff; border: 1px solid #e7e7ef; border-radius: 14px; padding: 16px; }
+    .row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn { border: 1px solid #ddd; background: #fff; padding: 10px 12px; border-radius: 10px; cursor: pointer; }
+    .btn.primary { border-color: #111; }
+    .muted { color: #555; font-size: 14px; }
+    .big { font-size: 18px; line-height: 1.35; }
+    .sep { height: 12px; }
+    .input { width: 100%; box-sizing: border-box; padding: 10px 12px; border-radius: 10px; border: 1px solid #ddd; font-size: 16px; }
+    .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; background: #eef; border: 1px solid #dde; font-size: 12px; margin-left: 6px; }
+    details { background:#fafbff; border:1px dashed #ccd; padding:10px 12px; border-radius:12px; }
+    .ok { color: #0a7; }
+    .bad { color: #c20; }
+    code { background: #f0f1f6; padding: 2px 6px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Lernziele Niveau g – Üben <span class="pill" id="statsPill">…</span></h1>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-view="cards">Lernkarten</button>
+    <button class="tab" role="tab" aria-selected="false" data-view="mc">Quiz (MC)</button>
+    <button class="tab" role="tab" aria-selected="false" data-view="input">Kurztest (Eingabe)</button>
+    <button class="tab" role="tab" aria-selected="false" data-view="manage">Daten</button>
+  </div>
+</header>
+
+<main>
+  <section class="card" id="view"></section>
+</main>
+
+<script>
+/**
+ * DATENBASIS: Lernziel-Zusammenfassung Niveau G (aus dem Chat).
+ * Du kannst später weitere Karten ergänzen.
+ */
+const cards = [
+  {
+    id: "g-01",
+    front: "Du kennst die Sinne und die entsprechenden Organe beim Menschen.",
+    back: "Wir haben z. B. diese Sinne: Hören (Ohr), Sehen (Auge), Tasten (Haut), Riechen (Nase), Schmecken (Zunge).",
+    tags: ["Sinne"]
+  },
+  {
+    id: "g-02",
+    front: "Du kennst den Unterschied zwischen Riechen und Schmecken.",
+    back: "Schmecken passiert mit der Zunge. Riechen passiert mit der Nase. Das Aroma kommt oft von Zunge und Nase zusammen.",
+    tags: ["Sinne", "Aroma"]
+  },
+  {
+    id: "g-03",
+    front: "Du kennst das Reiz-Reaktionsschema.",
+    back: "Reiz → Leitung → Verarbeitung → Leitung → Reaktion.",
+    tags: ["Reiz-Reaktion"]
+  },
+  {
+    id: "g-04",
+    front: "Du kannst erklären, was in deinem Körper passiert, wenn ein Reiz eine Reaktion auslöst.",
+    back: "Sinneszellen merken den Reiz und machen Nervenimpulse. Die Impulse gehen zum Gehirn. Dann gehen Impulse zu den Muskeln → du reagierst.",
+    tags: ["Reiz-Reaktion", "Nerven", "Gehirn"]
+  },
+  {
+    id: "g-05",
+    front: "Du kennst den Unterschied zwischen einer bewussten und unbewussten Reaktion.",
+    back: "Bewusst: Ich denke nach und entscheide absichtlich. Unbewusst: Es passiert automatisch.",
+    tags: ["Reaktionen"]
+  },
+  {
+    id: "g-06",
+    front: "Du kannst erklären, was ein Reflex ist und kennst deren Aufgabe.",
+    back: "Ein Reflex ist sehr schnell und automatisch. Er schützt den Körper vor Verletzungen.",
+    tags: ["Reflex", "Reaktionen"]
+  },
+  {
+    id: "g-07",
+    front: "Dir sind die Begriffe Schallquellen, Membran und Ausbreitung des Schalls bekannt.",
+    back: "Eine Schallquelle macht Schall. Eine Membran kann schwingen. Schall breitet sich aus, weil Luftteilchen schwingen und die Bewegung weitergeben.",
+    tags: ["Schall"]
+  },
+  {
+    id: "g-08",
+    front: "Du weisst wie der Schall auf unterschiedliche Materialien (fest, elastisch) reagiert.",
+    back: "Schall kann Dinge zum Schwingen bringen oder zurückgeworfen werden (Echo).",
+    tags: ["Schall", "Materialien"]
+  },
+  {
+    id: "g-09",
+    front: "Du kennst die 6 wichtigsten Teile des Gehörs.",
+    back: "Ohrmuschel – Gehörgang – Trommelfell – Gehörknöchelchen – Hörschnecke – Hörnerv.",
+    tags: ["Ohr", "Gehör"]
+  },
+  {
+    id: "g-10",
+    front: "Du weisst wie ein Ohr funktioniert.",
+    back: "Ohrmuschel fängt Schall auf → Gehörgang leitet → Trommelfell schwingt → Knöchelchen übertragen → Hörschnecke macht Nervenimpulse → Hörnerv bringt sie ins Gehirn.",
+    tags: ["Ohr", "Gehör"]
+  },
+  {
+    id: "g-11",
+    front: "Du weisst wie die Lautstärke gemessen wird und kennst die Einheit.",
+    back: "Lautstärke misst man in Dezibel (dB).",
+    tags: ["Lärm", "Schall"]
+  },
+  {
+    id: "g-12",
+    front: "Du kannst beurteilen, ab welcher Lautstärke das Gehör Schaden nehmen kann.",
+    back: "Sehr laut ist gefährlich. Je lauter und je länger, desto grösser das Risiko (z. B. Disco, Feuerwerk).",
+    tags: ["Lärm", "Gehörschutz"]
+  },
+  {
+    id: "g-13",
+    front: "Du kennst verschiedene Möglichkeiten, wie du dich vor einem Gehörschaden schützen kannst.",
+    back: "Leiser hören, Pausen machen, nicht zu lange im Lärm bleiben, und Gehörschutz/Ohrstöpsel benutzen.",
+    tags: ["Gehörschutz", "Lärm"]
+  }
+];
+
+// --- Mini-Spaced-Repetition State (localStorage) ---
+const LS_KEY = "lernziele_g_progress_v1";
+const defaultState = () => ({
+  idx: 0,
+  // cardId -> { ease: 1..3, due: timestamp }
+  sched: {}
+});
+const loadState = () => {
+  try { return JSON.parse(localStorage.getItem(LS_KEY)) ?? defaultState(); }
+  catch { return defaultState(); }
+};
+const saveState = (s) => localStorage.setItem(LS_KEY, JSON.stringify(s));
+
+let state = loadState();
+
+function now() { return Date.now(); }
+
+function dueCards() {
+  const due = cards.filter(c => (state.sched[c.id]?.due ?? 0) <= now());
+  return due.length ? due : cards;
+}
+
+function pickCard() {
+  const pool = dueCards();
+  const idx = state.idx % pool.length;
+  return pool[idx];
+}
+
+function setView(name) {
+  document.querySelectorAll(".tab").forEach(b =>
+    b.setAttribute("aria-selected", b.dataset.view === name ? "true" : "false")
+  );
+  render(name);
+}
+
+function updateStats() {
+  const total = cards.length;
+  const due = cards.filter(c => (state.sched[c.id]?.due ?? 0) <= now()).length;
+  document.getElementById("statsPill").textContent = `${due} fällig / ${total} total`;
+}
+
+function schedule(cardId, rating) {
+  const old = state.sched[cardId] ?? { ease: 2, due: 0 };
+  let ease = old.ease;
+
+  if (rating === "easy") ease = Math.min(3, ease + 1);
+  if (rating === "hard") ease = Math.max(1, ease - 1);
+
+  const intervals = { 1: 2, 2: 10, 3: 60 }; // Minuten
+  const addMin = intervals[ease];
+
+  state.sched[cardId] = { ease, due: now() + addMin * 60 * 1000 };
+  state.idx++;
+  saveState(state);
+  updateStats();
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i=a.length-1; i>0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function render(viewName) {
+  updateStats();
+  const el = document.getElementById("view");
+
+  if (viewName === "cards") {
+    const c = pickCard();
+    el.innerHTML = `
+      <div class="muted">Lernkarte</div>
+      <div class="sep"></div>
+      <div class="big"><strong>Frage:</strong> ${escapeHtml(c.front)}</div>
+      <div class="sep"></div>
+      <details>
+        <summary><strong>Lösung anzeigen</strong></summary>
+        <div class="sep"></div>
+        <div class="big">${escapeHtml(c.back)}</div>
+      </details>
+      <div class="sep"></div>
+      <div class="row">
+        <button class="btn" id="hard">Schwer</button>
+        <button class="btn" id="ok">Okay</button>
+        <button class="btn primary" id="easy">Leicht</button>
+        <button class="btn" id="skip">Nächste</button>
+      </div>
+      <div class="sep"></div>
+      <div class="muted">Tags: ${(c.tags ?? []).map(t => `<span class="pill">${escapeHtml(t)}</span>`).join(" ")}</div>
+    `;
+    el.querySelector("#hard").onclick = () => schedule(c.id, "hard");
+    el.querySelector("#ok").onclick = () => schedule(c.id, "ok");
+    el.querySelector("#easy").onclick = () => schedule(c.id, "easy");
+    el.querySelector("#skip").onclick = () => { state.idx++; saveState(state); render("cards"); };
+    return;
+  }
+
+  if (viewName === "mc") {
+    const c = pickCard();
+    const others = cards.filter(x => x.id !== c.id).map(x => x.back);
+    const options = shuffle([c.back, ...shuffle(others).slice(0,3)]);
+    el.innerHTML = `
+      <div class="muted">Quiz (Multiple Choice)</div>
+      <div class="sep"></div>
+      <div class="big"><strong>${escapeHtml(c.front)}</strong></div>
+      <div class="sep"></div>
+      <div class="row" style="flex-direction:column;">
+        ${options.map((opt,i)=>`<button class="btn" data-i="${i}">${escapeHtml(opt)}</button>`).join("")}
+      </div>
+      <div class="sep"></div>
+      <div id="fb" class="big"></div>
+      <div class="sep"></div>
+      <div class="row">
+        <button class="btn" id="next">Nächste</button>
+      </div>
+    `;
+    el.querySelectorAll("button[data-i]").forEach(b => {
+      b.onclick = () => {
+        const chosen = b.textContent;
+        const fb = el.querySelector("#fb");
+        if (chosen === c.back) {
+          fb.innerHTML = `<span class="ok">✅ Richtig!</span>`;
+          schedule(c.id, "easy");
+        } else {
+          fb.innerHTML = `<span class="bad">❌ Falsch.</span><br><span class="muted">Richtig wäre:</span><br>${escapeHtml(c.back)}`;
+          schedule(c.id, "hard");
+        }
+        el.querySelectorAll("button[data-i]").forEach(x => x.disabled = true);
+      };
+    });
+    el.querySelector("#next").onclick = () => render("mc");
+    return;
+  }
+
+  if (viewName === "input") {
+    const c = pickCard();
+    el.innerHTML = `
+      <div class="muted">Kurztest (Eingabe)</div>
+      <div class="sep"></div>
+      <div class="big"><strong>${escapeHtml(c.front)}</strong></div>
+      <div class="sep"></div>
+      <textarea class="input" id="ans" rows="4" placeholder="Schreibe deine Antwort..."></textarea>
+      <div class="sep"></div>
+      <div class="row">
+        <button class="btn primary" id="check">Selbstkontrolle</button>
+        <button class="btn" id="next">Nächste</button>
+      </div>
+      <div class="sep"></div>
+      <div id="solution" style="display:none;">
+        <details open>
+          <summary><strong>Musterlösung</strong></summary>
+          <div class="sep"></div>
+          <div class="big">${escapeHtml(c.back)}</div>
+        </details>
+        <div class="sep"></div>
+        <div class="row">
+          <button class="btn" id="rateHard">War schwer</button>
+          <button class="btn" id="rateOk">War okay</button>
+          <button class="btn primary" id="rateEasy">War leicht</button>
+        </div>
+      </div>
+    `;
+    el.querySelector("#check").onclick = () => { el.querySelector("#solution").style.display = "block"; };
+    el.querySelector("#next").onclick = () => render("input");
+    el.querySelector("#rateHard").onclick = () => { schedule(c.id, "hard"); render("input"); };
+    el.querySelector("#rateOk").onclick = () => { schedule(c.id, "ok"); render("input"); };
+    el.querySelector("#rateEasy").onclick = () => { schedule(c.id, "easy"); render("input"); };
+    return;
+  }
+
+  if (viewName === "manage") {
+    el.innerHTML = `
+      <div class="muted">Daten / Reset</div>
+      <div class="sep"></div>
+      <div class="big">
+        <p><strong>So passt du deine Tabelle an:</strong></p>
+        <ol>
+          <li>Suche im Code die Liste <code>const cards = [...]</code></li>
+          <li>Jeder Eintrag ist eine Lernkarte mit <code>front</code> (Frage) und <code>back</code> (Lösung).</li>
+          <li>Du kannst optional <code>tags</code> ergänzen.</li>
+        </ol>
+      </div>
+      <div class="sep"></div>
+      <div class="row">
+        <button class="btn" id="reset">Fortschritt zurücksetzen</button>
+        <button class="btn" id="export">Fortschritt exportieren (JSON)</button>
+      </div>
+      <div class="sep"></div>
+      <textarea class="input" id="out" rows="6" placeholder="Export erscheint hier..."></textarea>
+    `;
+    el.querySelector("#reset").onclick = () => {
+      localStorage.removeItem(LS_KEY);
+      state = loadState();
+      updateStats();
+      el.querySelector("#out").value = "Zurückgesetzt ✅";
+    };
+    el.querySelector("#export").onclick = () => {
+      el.querySelector("#out").value = JSON.stringify(state, null, 2);
+    };
+    return;
+  }
+}
+
+function escapeHtml(s) {
+  return String(s)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+document.querySelectorAll(".tab").forEach(b => b.addEventListener("click", () => setView(b.dataset.view)));
+render("cards");
+</script>
+
+<script>
+  // PWA offline cache (optional)
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
+</script>
+
+</body>
+</html>
